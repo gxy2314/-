@@ -27,6 +27,7 @@ TIME_ZONE = 'Asia/Shanghai'
 `
    python manage.py runserver 0.0.0.0:8000
 `
+<br>
 &emsp;&emsp;0.0.0.0为本机IP，8000为端口号，<font color='red'>注意一定要在项目文件夹目录下运行该命令。</font>该命令运行后，即可通过浏览器访问该项目。访问地址127.0.0.1:8000/目录
 ## 终止项目
 &emsp;&emsp;只需在命令行下输入ctrl+c(win)或ctrl+z(macOS)
@@ -50,11 +51,12 @@ TIME_ZONE = 'Asia/Shanghai'
 | 5 | include| `django.urls.include`
 
 ## 杂项
-1. path函数中的变量，其调用的函数可调用
-2. 调用当前目录的views中的函数(urls.py)
+1. path函数调用的视图函数可调用path函数route位置的参数
+2. 调用当前目录的views中的函数
+   （以下内容写在urls.py中）
 ```
 urlpatterns=[
-    url(r'^$',views.process),
+    url(r'^$',views.需要调用的函数名),
 ]
 ```
 
