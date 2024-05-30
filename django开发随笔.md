@@ -94,7 +94,7 @@ _url.py_
 | 3 | re_path| `django.urls.re_path` |
 | 4 | httpResponse | `django.http.httpresponse` |
 | 5 | include| `django.urls.include`|
-| 6 |render | `django.shortcuts` |
+| 6 |render,redirect | `django.shortcuts` |
 
 ## 杂项
 1. path函数调用的视图函数可调用path函数route位置的参数
