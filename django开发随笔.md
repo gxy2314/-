@@ -42,6 +42,50 @@ TIME_ZONE = 'Asia/Shanghai'
 3. 如有子路由文件urls.py（需自行创建），需要在根路由urls.py下的urlpatterns下加入
    `path('应用路径/',include('应用名称.urls')),`
 
+## 文件上传<br>
+**后端部分** <br>
+**views.py**<br>
+```
+def uploadFile(request):
+    if request.method=="POST":
+        fileGet=request.FILES.get("甲",None)#当请求方式为post时，读取文件，这个值必须和html中 <input type="file" name="甲"/>的name值一致
+        #未实现文件上传，返回首页
+        if not fileGet:
+            return HttpResponse("请重新上传文件",status=200)
+         #   return redirect('/')
+        #上传成功，分块写入
+        storePath=open(os.path.join(BASE_DIR,'目标存储文件夹目录',fileGet.name),'wb+')
+        for chunk in fileGet.chunks():
+            storePath.write(chunk)
+        storePath.close()
+        return HttpResponse("上传成功")
+        # return render(request,'XXXX.html')      
+        #传送到处理结果页面
+        return redirect('/XXX/')
+    else:
+        #未知的情况，返回首页
+        return HttpResponse("上传错误")
+        return redirect('/')
+```
+
+
+_url.py_
+`path('乙/',views.uploadFile),`
+
+<br>
+
+**前端**<br>
+```
+<form enctype="multipart/form-data" action="/乙/" method="post">
+        <!-- action的赋值需同函数的路由保持一致 -->
+        {% csrf_token %}
+        <input type="file" name="甲"/>
+        <!-- name的取值需和views.py中的 fileGet=request.FILES.get("甲",None)第一个参数保持一致 -->
+        <br/>
+        <input type="submit" value="上传"/>
+    </form>
+```
+
 ## import相关
 | 序号  | 函数| 依赖的包| 
 | --- | :--- | :---: | 
@@ -49,15 +93,18 @@ TIME_ZONE = 'Asia/Shanghai'
 | 2 | path| `django.urls.path` |
 | 3 | re_path| `django.urls.re_path` |
 | 4 | httpResponse | `django.http.httpresponse` |
-| 5 | include| `django.urls.include`
+| 5 | include| `django.urls.include`|
+| 6 |render | `django.shortcuts` |
 
 ## 杂项
 1. path函数调用的视图函数可调用path函数route位置的参数
 2. 调用当前目录的views中的函数
    （以下内容写在urls.py中）
-```
+`
 urlpatterns=[
     url(r'^$',views.需要调用的函数名),
 ]
-```
+`
 
+## 玄学
+1. 在写跳转等功能时，若出现动作执行，地址异动，但页面没有反应的情况，可以考虑将视图函数对应的路由函数放在URL列表中较为靠前的位置
